@@ -44,3 +44,10 @@ def notes(req):
     
     notes = [model_to_dict(note) for note in req.user.note_set.all()]
     return JsonResponse({"notes": notes})
+
+@login_required
+def delete_note(req, note_id):
+    if req.method == 'DELETE':
+        note = Note.objects.get(id=note_id)
+        note.delete()
+        return JsonResponse({"message": "Note deleted"})

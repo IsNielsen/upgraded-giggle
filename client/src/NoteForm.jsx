@@ -24,6 +24,8 @@ function NoteForm() {
     });
     const body = await res.json();
     setNotes([...notes, body.note]);
+    setTitle('');
+    setContent('');
   }
 
   return (
