@@ -5,7 +5,7 @@ import os
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.forms.models import model_to_dict
-from .models import Note
+from .models import Recipe
 
 # Load manifest when server launches
 MANIFEST = {}
@@ -30,24 +30,24 @@ def me(req):
     return JsonResponse({"user": model_to_dict(req.user)})
 
 @login_required
-def notes(req):
+def recipes(req):
     if req.method == "POST":
         body = json.loads(req.body)
-        note = Note(
+        recipe = Recipe(
             title = body["title"],
             content = body["content"],
             user = req.user
         )
             
-        note.save()
-        return JsonResponse({"note": model_to_dict(note)})
+        recipe.save()
+        return JsonResponse({"recipe": model_to_dict(recipe)})
     
-    notes = [model_to_dict(note) for note in req.user.note_set.all()]
-    return JsonResponse({"notes": notes})
+    recipes = [model_to_dict(recipe) for recipe in req.user.recipe_set.all()]
+    return JsonResponse({"recipes": recipes})
 
 @login_required
-def delete_note(req, note_id):
+def delete_recipe(req, recipe_id):
     if req.method == 'DELETE':
-        note = Note.objects.get(id=note_id)
-        note.delete()
-        return JsonResponse({"message": "Note deleted"})
+        recipe = Recipe.objects.get(id=recipe_id)
+        recipe.delete()
+        return JsonResponse({"message": "Recipe deleted"})

@@ -5,7 +5,7 @@ import './App.css';
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [notes, setNotes] = useState([]);
+  const [recipes, setRecipes] = useState([]);
 
   async function getUser() {
     const res = await fetch('/me/', {
@@ -16,17 +16,17 @@ function App() {
     setLoading(false);
   }
 
-  async function getNotes() {
-    const res = await fetch('/notes/', {
+  async function getRecipes() {
+    const res = await fetch('/recipes/', {
       credentials: "same-origin",
     });
     const body = await res.json();
-    setNotes(body.notes);
+    setRecipes(body.recipes);
   }
 
   useEffect(() => {
     getUser();
-    getNotes();
+    getRecipes();
   }, []);
 
   async function logout() {
@@ -46,9 +46,9 @@ function App() {
       {loading && <div>Loading...</div>}
       {user && <div>Logged in as {user.first_name}</div>}
       <button onClick={logout}>Logout</button>
-      <Link to="/NoteForm"><button>Create Note</button></Link>
-      <Link to="/Notebook"><button>View Notes</button></Link>
-      <Outlet context={{ notes, setNotes }} />
+      <Link to="/RecipeForm"><button>Create Recipe</button></Link>
+      <Link to="/Cookbook"><button>View Recipes</button></Link>
+      <Outlet context={{ recipes, setRecipes }} />
     </div>
   );
 }
