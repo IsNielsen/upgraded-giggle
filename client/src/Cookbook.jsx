@@ -27,7 +27,18 @@ function Cookbook() {
       {recipes.map(recipe => (
         <div key={recipe.id}>
           <h2>{recipe.title}</h2>
-          <p>{recipe.content}</p>
+          <div>
+            {recipe.tags.map(tag => (
+              <span key={tag}>{tag}</span>
+            ))}
+          </div>
+
+          <h3>Instructions</h3>
+          <p>{recipe.instructions}</p>
+
+          <h3>Ingredients</h3>
+          <p>{recipe.ingredients}</p>
+
           <button onClick={() => deleteRecipe(recipe.id)}>Delete</button>
         </div>
       ))}

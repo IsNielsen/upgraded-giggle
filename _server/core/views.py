@@ -5,7 +5,7 @@ import os
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.forms.models import model_to_dict
-from .models import Recipe
+from .models import *
 
 # Load manifest when server launches
 MANIFEST = {}
@@ -35,7 +35,9 @@ def recipes(req):
         body = json.loads(req.body)
         recipe = Recipe(
             title = body["title"],
-            content = body["content"],
+            ingredients = body["ingredients"],
+            instructions = body["instructions"],
+            tags = body["tags"],
             user = req.user
         )
             
@@ -51,3 +53,7 @@ def delete_recipe(req, recipe_id):
         recipe = Recipe.objects.get(id=recipe_id)
         recipe.delete()
         return JsonResponse({"message": "Recipe deleted"})
+    
+def get_tags(req):
+    tags = list(Tag.objects.values('name'))
+    return JsonResponse(tags, safe=False)
