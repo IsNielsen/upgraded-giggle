@@ -6,23 +6,30 @@ import Cookbook from './Cookbook.jsx';
 import './index.css';
 import { createHashRouter, RouterProvider } from 'react-router-dom';
 
+// Create a router with initial routes
 const router = createHashRouter([
   {
-    path: '/',
-    element: <App />,
+    path: '/', // Root path
+    element: <App />, // Main component to render for the root path
     children: [
       {
-        path: "Cookbook",
-        element: <Cookbook />
+        path: "Cookbook", // Path for the Cookbook component
+        element: <Cookbook /> // Component to render for the Cookbook path
       },
       {
-        path: "RecipeForm",
-        element: <RecipeForm />
+        path: "RecipeForm", // Path for the RecipeForm component
+        element: <RecipeForm /> // Component to render for the RecipeForm path
       },
+      // Add more routes here
+      // {
+      //   path: "newPath", // New path
+      //   element: <NewComponent /> // Component to render for the new path
+      // }
     ]
   }
 ]);
 
+// Render the router provider with the created router
 ReactDOM.createRoot(document.getElementById('root')).render(
   <RouterProvider router={router} />
 );
