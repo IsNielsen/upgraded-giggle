@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App.jsx';
 import RecipeForm from './RecipeForm.jsx';
 import Cookbook from './Cookbook.jsx';
+import SearchRecipes from './SearchRecipes.jsx';
 import './index.css';
 import { createHashRouter, RouterProvider } from 'react-router-dom';
 
@@ -19,6 +20,10 @@ const router = createHashRouter([
       {
         path: "RecipeForm", // Path for the RecipeForm component
         element: <RecipeForm /> // Component to render for the RecipeForm path
+      },
+      {
+        path: "SearchRecipes", // Path for the SearchRecipes component
+        element: <SearchRecipes /> // Component to render for the SearchRecipes path
       },
       // Add more routes here
       // {
