@@ -2,13 +2,18 @@ import React, { useState } from 'react';
 import * as cookie from 'cookie';
 import { useOutletContext } from 'react-router-dom';
 
+const predefinedTags = ['GlutenFree', 'Vegan', 'Vegetarian', 'DairyFree', 'NutFree'];
+
 function RecipeForm() {
   const { recipes, setRecipes } = useOutletContext();
   const [title, setTitle] = useState('');
-  const [ingredients, setIngredients] = useState('');
-  const [instructions, setInstructions] = useState('');
+  const [ingredients, setIngredients] = useState([]);
+  const [ingredientName, setIngredientName] = useState('');
+  const [ingredientAmount, setIngredientAmount] = useState('');
+  const [instructions, setInstructions] = useState([]);
+  const [instructionInput, setInstructionInput] = useState('');
   const [tags, setTags] = useState([]);
-  const [tagInput, setTagInput] = useState('');
+  const [isPublic, setIsPublic] = useState(false);
 
   async function createRecipe(e) {
     e.preventDefault();
@@ -21,6 +26,7 @@ function RecipeForm() {
         ingredients,
         instructions,
         tags,
+        public: isPublic,
       }),
       headers: {
         "Content-Type": "application/json",
@@ -30,46 +36,128 @@ function RecipeForm() {
     const body = await res.json();
     setRecipes([...recipes, body.recipe]);
     setTitle('');
-    setIngredients('');
-    setInstructions('');
+    setIngredients([]);
+    setInstructions([]);
     setTags([]);
-    setTagInput('');
+    setIsPublic(false);
   }
 
-  function addTag(e) {
+  function addIngredient(e) {
     e.preventDefault();
-    if (tagInput && !tags.includes(tagInput)) {
-      setTags([...tags, tagInput]);
-      setTagInput('');
+    if (ingredientName && ingredientAmount) {
+      setIngredients([...ingredients, { name: ingredientName, amount: ingredientAmount }]);
+      setIngredientName('');
+      setIngredientAmount('');
     }
   }
 
-  function removeTag(tagToRemove) {
-    setTags(tags.filter(t => t !== tagToRemove));
+  function removeIngredient(index) {
+    setIngredients(ingredients.filter((_, i) => i !== index));
+  }
+
+  function addInstruction(e) {
+    e.preventDefault();
+    if (instructionInput) {
+      setInstructions([...instructions, instructionInput]);
+      setInstructionInput('');
+    }
+  }
+
+  function removeInstruction(index) {
+    setInstructions(instructions.filter((_, i) => i !== index));
+  }
+
+  function handleTagChange(tag) {
+    if (tags.includes(tag)) {
+      setTags(tags.filter(t => t !== tag));
+    } else {
+      setTags([...tags, tag]);
+    }
   }
 
   return (
     <form onSubmit={createRecipe} className='new-recipe-form'>
-      Recipe Name
-      <input type='text' value={title} onChange={e => setTitle(e.target.value)} />
-
-      Ingredients
-      <textarea value={ingredients} onChange={e => setIngredients(e.target.value)} />
-
-      Instructions
-      <textarea value={instructions} onChange={e => setInstructions(e.target.value)} />
-
-      Tags
       <div>
-        {tags.map(tag => (
-          <span key={tag}>
-            {tag} <button type="button" onClick={() => removeTag(tag)}>x</button>
-          </span>
-        ))}
+        <label>Recipe Name</label>
+        <input type='text' value={title} onChange={e => setTitle(e.target.value)} />
       </div>
-      <input type='text' value={tagInput} onChange={e => setTagInput(e.target.value)} />
-      <button type='button' onClick={addTag}>Add Tag</button>
 
+      <div>
+        <label>Ingredients</label>
+        <div>
+          <input
+            type='text'
+            placeholder='Ingredient Name'
+            value={ingredientName}
+            onChange={e => setIngredientName(e.target.value)}
+          />
+          <input
+            type='text'
+            placeholder='Amount'
+            value={ingredientAmount}
+            onChange={e => setIngredientAmount(e.target.value)}
+          />
+          <button type='button' onClick={addIngredient}>Add Ingredient</button>
+        </div>
+        <ul>
+          {ingredients.map((ingredient, index) => (
+            <li key={index}>
+              {ingredient.name} - {ingredient.amount}
+              <button type='button' onClick={() => removeIngredient(index)}>x</button>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div>
+        <label>Instructions</label>
+        <div>
+          <input
+            type='text'
+            placeholder='Instruction'
+            value={instructionInput}
+            onChange={e => setInstructionInput(e.target.value)}
+          />
+          <button type='button' onClick={addInstruction}>Add Instruction</button>
+        </div>
+        <ul>
+          {instructions.map((instruction, index) => (
+            <li key={index}>
+              {instruction}
+              <button type='button' onClick={() => removeInstruction(index)}>x</button>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div>
+        <label>Tags</label>
+        <div>
+          {predefinedTags.map(tag => (
+            <div key={tag}>
+              <label>
+                <input
+                  type='checkbox'
+                  checked={tags.includes(tag)}
+                  onChange={() => handleTagChange(tag)}
+                />
+                {tag}
+              </label>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <label>
+          <input
+            type='checkbox'
+            checked={isPublic}
+            onChange={e => setIsPublic(e.target.checked)}
+          />
+          Public
+        </label>
+      </div>
 
       <button type='submit'>Create Recipe</button>
     </form>

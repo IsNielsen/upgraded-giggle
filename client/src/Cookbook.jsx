@@ -3,7 +3,7 @@ import { useOutletContext } from 'react-router-dom';
 import * as cookie from 'cookie';
 
 function Cookbook() {
-  const { recipes, setRecipes } = useOutletContext();
+  const { recipes, setRecipes, user } = useOutletContext();
 
   async function deleteRecipe(id) {
     const res = await fetch(`/recipes/${id}/`, {
@@ -22,9 +22,17 @@ function Cookbook() {
     }
   }
 
+  if (!user) {
+    return <div>Loading...</div>;
+  }
+
+  const myRecipes = recipes.filter(recipe => recipe.user === user.id);
+  const publicRecipes = recipes.filter(recipe => recipe.public && recipe.user !== user.id);
+
   return (
     <div className='cookbook'>
-      {recipes.map(recipe => (
+      <h1>My Recipes</h1>
+      {myRecipes.map(recipe => (
         <div key={recipe.id}>
           <h2>{recipe.title}</h2>
           <div>
@@ -34,12 +42,50 @@ function Cookbook() {
           </div>
 
           <h3>Instructions</h3>
-          <p>{recipe.instructions}</p>
+          <ul>
+            {recipe.instructions.map((instruction, index) => (
+              <li key={index}>{instruction}</li>
+            ))}
+          </ul>
 
           <h3>Ingredients</h3>
-          <p>{recipe.ingredients}</p>
+          <ul>
+            {recipe.ingredients.map((ingredient, index) => (
+              <li key={index}>
+                {ingredient.name} - {ingredient.amount}
+              </li>
+            ))}
+          </ul>
 
           <button onClick={() => deleteRecipe(recipe.id)}>Delete</button>
+        </div>
+      ))}
+
+      <h1>Public Recipes</h1>
+      {publicRecipes.map(recipe => (
+        <div key={recipe.id}>
+          <h2>{recipe.title}</h2>
+          <div>
+            {recipe.tags.map(tag => (
+              <span key={tag}>{tag}</span>
+            ))}
+          </div>
+
+          <h3>Instructions</h3>
+          <ul>
+            {recipe.instructions.map((instruction, index) => (
+              <li key={index}>{instruction}</li>
+            ))}
+          </ul>
+
+          <h3>Ingredients</h3>
+          <ul>
+            {recipe.ingredients.map((ingredient, index) => (
+              <li key={index}>
+                {ingredient.name} - {ingredient.amount}
+              </li>
+            ))}
+          </ul>
         </div>
       ))}
     </div>

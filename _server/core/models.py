@@ -5,10 +5,11 @@ from django.contrib.auth.models import User
 class Recipe(models.Model):
     id = models.BigAutoField(primary_key=True)
     title = models.TextField()
-    ingredients = models.TextField()
-    instructions = models.TextField()
+    ingredients = models.JSONField(default=list)
+    instructions = models.JSONField(default=list)
     tags = models.JSONField(default=list)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    public = models.BooleanField(default=False)
 
 
     
