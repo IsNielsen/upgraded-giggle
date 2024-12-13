@@ -6,6 +6,7 @@ function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [recipes, setRecipes] = useState([]);
+  const [events, setEvents] = useState([]); // State to track the events
 
   // User authentication
 
@@ -40,21 +41,27 @@ function App() {
     setRecipes(body.recipes);
   }
 
-  // Insert more stuff here
-
+  // Fetch events
+  async function getEvents() {
+    const res = await fetch('/events/', {
+      credentials: "same-origin",
+    });
+    const body = await res.json();
+    setEvents(body.events);
+  }
 
   // place function calls inside useEffect to make sure they grab the data before rendering
 
   useEffect(() => {
     getUser();
     getRecipes();
+    getEvents();
   }, []);
-  
 
-/*
-* Outlet does the routing for child components
-* Link is used to navigate to different pages
-*/
+  /*
+  * Outlet does the routing for child components
+  * Link is used to navigate to different pages
+  */
   return (
     <div className='content'>
       {loading && <div>Loading...</div>}
@@ -64,10 +71,9 @@ function App() {
       <Link to="/RecipeForm"><button>Create Recipe</button></Link>
       <Link to="/Cookbook"><button>View Recipes</button></Link>
       <Link to="/SearchRecipes"><button>Search Recipes</button></Link>
-      <Link to="/Calendar"><button>View Calendar</button></Link> {/* Add link to Calendar */}
+      <Link to="/Calendar"><button>View Calendar</button></Link>
 
-
-      <Outlet context={{ recipes, setRecipes, user }} />
+      <Outlet context={{ recipes, setRecipes, user, events, setEvents }} />
     </div>
   );
 }

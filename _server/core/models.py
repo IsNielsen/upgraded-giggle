@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-# Create your models here.
 class Recipe(models.Model):
     id = models.BigAutoField(primary_key=True)
     title = models.TextField()
@@ -11,8 +10,11 @@ class Recipe(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     public = models.BooleanField(default=False)
 
+class Event(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+    date = models.DateField()
 
-    
 class Tag(models.Model):
     name = models.CharField(max_length=50, unique=True)
 

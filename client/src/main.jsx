@@ -5,6 +5,7 @@ import RecipeForm from './RecipeForm.jsx';
 import Cookbook from './Cookbook.jsx';
 import SearchRecipes from './SearchRecipes.jsx';
 import Calendar from './Calendar.jsx';
+import ViewRecipe from './ViewRecipe.jsx'; // Import the new ViewRecipe component
 import './index.css';
 import { createHashRouter, RouterProvider } from 'react-router-dom';
 
@@ -30,11 +31,14 @@ const router = createHashRouter([
         path: "Calendar", // Path for the Calendar component
         element: <Calendar /> // Component to render for the Calendar path
       },
-      // Add more routes here
-      // {
-      //   path: "newPath", // New path
-      //   element: <NewComponent /> // Component to render for the new path
-      // }
+      {
+        path: "ViewRecipe/:eventId", // Path for the ViewRecipe component with eventId
+        element: <ViewRecipe /> // Component to render for the ViewRecipe path
+      },
+      {
+        path: "ViewRecipeById/:recipeId", // Path for the ViewRecipe component with recipeId
+        element: <ViewRecipe /> // Component to render for the ViewRecipe path
+      },
     ]
   }
 ]);

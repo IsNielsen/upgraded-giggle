@@ -1,5 +1,5 @@
 import React from 'react';
-import { useOutletContext } from 'react-router-dom';
+import { useOutletContext, Link } from 'react-router-dom';
 import * as cookie from 'cookie';
 
 function Cookbook() {
@@ -58,6 +58,7 @@ function Cookbook() {
           </ul>
 
           <button onClick={() => deleteRecipe(recipe.id)}>Delete</button>
+          <Link to={`/ViewRecipeById/${recipe.id}`}><button>View Recipe</button></Link>
         </div>
       ))}
 
@@ -86,6 +87,8 @@ function Cookbook() {
               </li>
             ))}
           </ul>
+
+          <Link to={`/ViewRecipeById/${recipe.id}`}><button>View Recipe</button></Link>
         </div>
       ))}
     </div>

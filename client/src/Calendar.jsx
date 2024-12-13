@@ -1,14 +1,50 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useOutletContext, Link } from 'react-router-dom';
 
 function Calendar() {
+  const { recipes, events, setEvents } = useOutletContext();
   const [currentDate, setCurrentDate] = useState(new Date()); // State to track the current date
   const [view, setView] = useState('week'); // State to track the current view (month, week, day)
+  const [hoveredDate, setHoveredDate] = useState(null); // State to track the hovered date
+  const [selectedDate, setSelectedDate] = useState(null); // State to track the selected date for adding event
+  const [searchTerm, setSearchTerm] = useState(''); // State to track the search term
+  const [filteredRecipes, setFilteredRecipes] = useState([]); // State to track the filtered recipes
+
+  // Function to get the CSRF token from cookies
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        // Does this cookie string begin with the name we want?
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
 
   // Function to get the number of days in a month
   const daysInMonth = (month, year) => new Date(year, month + 1, 0).getDate();
 
   // Function to get the first day of the month
   const firstDayOfMonth = (month, year) => new Date(year, month, 1).getDay();
+
+  // Function to fetch events
+  const fetchEvents = async () => {
+    const res = await fetch('/events/', {
+      credentials: 'same-origin',
+    });
+    const body = await res.json();
+    setEvents(body.events);
+  };
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
 
   // Function to render the month view
   const renderMonthView = () => {
@@ -25,7 +61,26 @@ function Calendar() {
 
     // Add days of the month
     for (let day = 1; day <= days; day++) {
-      calendarDays.push(<div key={day} className="calendar-day">{day}</div>);
+      const date = new Date(year, month, day);
+      const dayEvents = events.filter(event => new Date(event.date).toDateString() === date.toDateString());
+      calendarDays.push(
+        <div
+          key={day}
+          className="calendar-day"
+          onMouseEnter={() => setHoveredDate(date)}
+          onMouseLeave={() => setHoveredDate(null)}
+        >
+          <div className="date">{day}</div>
+          {dayEvents.map(event => (
+            <Link key={event.id} to={`/ViewRecipe/${event.id}`}>
+              <div className="event">{event.recipe.title}</div>
+            </Link>
+          ))}
+          {hoveredDate && hoveredDate.getDate() === day && (
+            <button onClick={() => setSelectedDate(date)}>Add Event</button>
+          )}
+        </div>
+      );
     }
 
     return calendarDays;
@@ -41,7 +96,25 @@ function Calendar() {
     for (let i = 0; i < 7; i++) {
       const day = new Date(startOfWeek);
       day.setDate(startOfWeek.getDate() + i);
-      calendarDays.push(<div key={i} className="calendar-day">{day.getDate()}</div>);
+      const dayEvents = events.filter(event => new Date(event.date).toDateString() === day.toDateString());
+      calendarDays.push(
+        <div
+          key={i}
+          className="calendar-day"
+          onMouseEnter={() => setHoveredDate(day)}
+          onMouseLeave={() => setHoveredDate(null)}
+        >
+          <div className="date">{day.getDate()}</div>
+          {dayEvents.map(event => (
+            <Link key={event.id} to={`/ViewRecipe/${event.id}`}>
+              <div className="event">{event.recipe.title}</div>
+            </Link>
+          ))}
+          {hoveredDate && hoveredDate.getDate() === day.getDate() && (
+            <button onClick={() => setSelectedDate(day)}>Add Event</button>
+          )}
+        </div>
+      );
     }
 
     return calendarDays;
@@ -49,7 +122,24 @@ function Calendar() {
 
   // Function to render the day view
   const renderDayView = () => {
-    return <div className="calendar-day">{currentDate.getDate()}</div>;
+    const dayEvents = events.filter(event => new Date(event.date).toDateString() === currentDate.toDateString());
+    return (
+      <div
+        className="calendar-day"
+        onMouseEnter={() => setHoveredDate(currentDate)}
+        onMouseLeave={() => setHoveredDate(null)}
+      >
+        <div className="date">{currentDate.getDate()}</div>
+        {dayEvents.map(event => (
+          <Link key={event.id} to={`/ViewRecipe/${event.id}`}>
+            <div className="event">{event.recipe.title}</div>
+          </Link>
+        ))}
+        {hoveredDate && hoveredDate.getDate() === currentDate.getDate() && (
+          <button onClick={() => setSelectedDate(currentDate)}>Add Event</button>
+        )}
+      </div>
+    );
   };
 
   // Function to handle previous button click
@@ -72,6 +162,38 @@ function Calendar() {
     } else {
       setCurrentDate(new Date(currentDate.setDate(currentDate.getDate() + 1)));
     }
+  };
+
+  // Function to handle search
+  const handleSearch = (e) => {
+    e.preventDefault();
+    const results = recipes.filter(recipe =>
+      recipe.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredRecipes(results);
+  };
+
+  // Function to handle adding event
+  const handleAddEvent = (recipeId) => {
+    const csrftoken = getCookie('csrftoken');
+    fetch('/add_event/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrftoken,
+      },
+      body: JSON.stringify({
+        recipe_id: recipeId,
+        date: selectedDate.toISOString().split('T')[0],
+      }),
+    }).then(response => response.json())
+      .then(data => {
+        console.log(data);
+        setSelectedDate(null);
+        setSearchTerm('');
+        setFilteredRecipes([]);
+        fetchEvents(); // Refresh events after adding a new one
+      });
   };
 
   return (
@@ -102,6 +224,32 @@ function Calendar() {
         {view === 'week' && renderWeekView()}
         {view === 'day' && renderDayView()}
       </div>
+      {selectedDate && (
+        <div className="add-event-modal">
+          <h3>Add Event for {selectedDate.toDateString()}</h3>
+          <form onSubmit={handleSearch}>
+            <input
+              type="text"
+              placeholder="Search by title"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <button type="submit">Search</button>
+          </form>
+          <div>
+            {filteredRecipes.length > 0 ? (
+              filteredRecipes.map(recipe => (
+                <div key={recipe.id}>
+                  <h2>{recipe.title}</h2>
+                  <button onClick={() => handleAddEvent(recipe.id)}>Add Event</button>
+                </div>
+              ))
+            ) : (
+              <p>No recipes found</p>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
