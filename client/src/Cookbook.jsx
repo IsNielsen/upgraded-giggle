@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useOutletContext, Link } from 'react-router-dom';
 import * as cookie from 'cookie';
 
 function Cookbook() {
   const { recipes, setRecipes, user } = useOutletContext();
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredRecipes, setFilteredRecipes] = useState([]);
 
   async function deleteRecipe(id) {
     const res = await fetch(`/recipes/${id}/`, {
@@ -22,6 +24,15 @@ function Cookbook() {
     }
   }
 
+  const handleSearch = (e) => {
+    e.preventDefault();
+    const results = recipes.filter(recipe =>
+      recipe.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      recipe.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+    setFilteredRecipes(results);
+  };
+
   if (!user) {
     return <div>Loading...</div>;
   }
@@ -31,6 +42,49 @@ function Cookbook() {
 
   return (
     <div className='cookbook'>
+      <h1>Search Recipes</h1>
+      <form onSubmit={handleSearch}>
+        <input
+          type="text"
+          placeholder="Search by title"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <button type="submit">Search</button>
+      </form>
+      <div>
+        {filteredRecipes.length > 0 ? (
+          filteredRecipes.map(recipe => (
+            <div key={recipe.id}>
+              <h2>{recipe.title}</h2>
+              <div>
+                {recipe.tags.map(tag => (
+                  <span key={tag}>{tag}</span>
+                ))}
+              </div>
+              <h3>Instructions</h3>
+              <ul>
+                {recipe.instructions.map((instruction, index) => (
+                  <li key={index}>{instruction}</li>
+                ))}
+              </ul>
+              <h3>Ingredients</h3>
+              <ul>
+                {recipe.ingredients.map((ingredient, index) => (
+                  <li key={index}>
+                    {ingredient.name} - {ingredient.amount}
+                  </li>
+                ))}
+              </ul>
+              <button onClick={() => deleteRecipe(recipe.id)}>Delete</button>
+              <Link to={`/ViewRecipeById/${recipe.id}`}><button>View Recipe</button></Link>
+            </div>
+          ))
+        ) : (
+          <p>No recipes found</p>
+        )}
+      </div>
+
       <h1>My Recipes</h1>
       {myRecipes.map(recipe => (
         <div key={recipe.id}>

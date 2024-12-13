@@ -1,48 +1,98 @@
+/*
+#f0b593	(240,181,147) peach
+#b4e194	(180,225,148) green
+#89c4ce	(137,196,206) blue
+#f2c258	(242,194,88) yellow
+#313131	(49,49,49) black
+*/
+
+.header {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  align-items: center;
+
+}
+
+.login {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  gap: 10px;
+}
+
 .content {
-  width: 90%;
-  margin: 0 auto;
+  width: 80vw;
   padding: 2rem;
-  background-color: #1a1a1a;
-  border-radius: 8px;
-  color: #ffffff;
+  background-color: #b4e194; /* black */
+  border-radius: 10px;
+  color: #f0b593; /* peach */
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .new-recipe-form {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  margin-top: 1rem;
+  gap: 10px;
+  margin-top: 10px;
+  background-color: #313131; /* black */
+  padding: 50px;
+  border-radius: 10px;
 }
 
 .new-recipe-form input,
 .new-recipe-form textarea {
-  padding: 0.5rem;
-  border: 1px solid #444;
+  padding: 5px;
+  border: 1px solid #b4e194; /* green */
   border-radius: 4px;
-  background-color: #2c2c2c;
-  color: #ffffff;
+  background-color: #89c4ce; /* blue */
+  color: #313131; /* black */
 }
 
 .new-recipe-form button {
-  background-color: #ff4c4c;
-  color: white;
+  background-color: #f2c258; /* yellow */
+  color: #313131; /* black */
   border: none;
-  padding: 0.75rem;
-  border-radius: 4px;
+  padding: 5px;
+  border-radius: 5px;
   cursor: pointer;
 }
 .new-recipe-form button:hover {
-  background-color: #ff1a1a;
+  background-color: #f0b593; /* peach */
 }
 
 button {
-  background-color: #ff4c4c;
-  color: white;
-  border: 1px solid white;
-  padding: 0.75rem;
-  border-radius: 4px;
+  background-color: #f2c258; /* yellow */
+  color: #313131; /* black */
+  border: 1px solid #313131; /* black */
+  padding: 5px;
+  border-radius: 5px;
   cursor: pointer;
 }
 button:hover {
-  background-color: #ff1a1a;
+  background-color: #f0b593; /* peach */
+}
+
+.cookbook {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: #313131; /* black */
+  padding: 50px;
+  border-radius: 10px;
+}
+
+.view-recipe {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: #313131; /* black */
+  padding: 50px;
+  border-radius: 10px;
 }

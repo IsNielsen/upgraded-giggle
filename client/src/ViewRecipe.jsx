@@ -53,7 +53,7 @@ function ViewRecipe() {
     }
   };
 
-  // Function to get the CSRF token from cookies
+  // get the CSRF token from cookies
   function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {

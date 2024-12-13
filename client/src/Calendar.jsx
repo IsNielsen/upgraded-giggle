@@ -1,17 +1,24 @@
+/* 
+  Whatever you do, do not read this file. It is a mess.
+  I struggled getting the built in react calendar to work, 
+  so I found a tutorial to help build it from scratch for what I needed.
+  It is very janky but I am proud of it.
+*/
+
 import React, { useState, useEffect } from 'react';
 import { useOutletContext, Link } from 'react-router-dom';
 import './calendar.css'; 
 
 function Calendar() {
   const { recipes, events, setEvents } = useOutletContext();
-  const [currentDate, setCurrentDate] = useState(new Date()); // State to track the current date
-  const [view, setView] = useState('week'); // State to track the current view (month, week, day)
-  const [hoveredDate, setHoveredDate] = useState(null); // State to track the hovered date
-  const [selectedDate, setSelectedDate] = useState(null); // State to track the selected date for adding event
-  const [searchTerm, setSearchTerm] = useState(''); // State to track the search term
-  const [filteredRecipes, setFilteredRecipes] = useState([]); // State to track the filtered recipes
+  const [currentDate, setCurrentDate] = useState(new Date()); // track the current date
+  const [view, setView] = useState('week'); // track the current view (month, week, day)
+  const [hoveredDate, setHoveredDate] = useState(null); // track the hovered date
+  const [selectedDate, setSelectedDate] = useState(null); // track the selected date for adding event
+  const [searchTerm, setSearchTerm] = useState(''); // track the search term
+  const [filteredRecipes, setFilteredRecipes] = useState([]); // track the filtered recipes
 
-  // Function to get the CSRF token from cookies
+  // Cookie monster (CSRF)
   function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -28,13 +35,13 @@ function Calendar() {
     return cookieValue;
   }
 
-  // Function to get the number of days in a month
+  // get the number of days in a month
   const daysInMonth = (month, year) => new Date(year, month + 1, 0).getDate();
 
-  // Function to get the first day of the month
+  // get the first day of the month
   const firstDayOfMonth = (month, year) => new Date(year, month, 1).getDay();
 
-  // Function to fetch events
+  // get events/meals
   const fetchEvents = async () => {
     const res = await fetch('/events/', {
       credentials: 'same-origin',
@@ -47,7 +54,7 @@ function Calendar() {
     fetchEvents();
   }, []);
 
-  // Function to render the month view
+  // render the month view
   const renderMonthView = () => {
     const month = currentDate.getMonth();
     const year = currentDate.getFullYear();
@@ -87,7 +94,7 @@ function Calendar() {
     return calendarDays;
   };
 
-  // Function to render the week view
+  // render the week view
   const renderWeekView = () => {
     const startOfWeek = new Date(currentDate);
     startOfWeek.setDate(currentDate.getDate() - currentDate.getDay());
@@ -121,7 +128,7 @@ function Calendar() {
     return calendarDays;
   };
 
-  // Function to render the day view
+  // render the day view
   const renderDayView = () => {
     const dayEvents = events.filter(event => new Date(event.date).toDateString() === currentDate.toDateString());
     return (
@@ -143,7 +150,7 @@ function Calendar() {
     );
   };
 
-  // Function to handle previous button click
+  // handle previous button click
   const handlePrev = () => {
     if (view === 'month') {
       setCurrentDate(new Date(currentDate.setMonth(currentDate.getMonth() - 1)));
@@ -154,7 +161,7 @@ function Calendar() {
     }
   };
 
-  // Function to handle next button click
+  // handle next button click
   const handleNext = () => {
     if (view === 'month') {
       setCurrentDate(new Date(currentDate.setMonth(currentDate.getMonth() + 1)));
@@ -165,16 +172,17 @@ function Calendar() {
     }
   };
 
-  // Function to handle search
+  // handle search
   const handleSearch = (e) => {
     e.preventDefault();
     const results = recipes.filter(recipe =>
-      recipe.title.toLowerCase().includes(searchTerm.toLowerCase())
+      recipe.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      recipe.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
     );
     setFilteredRecipes(results);
   };
 
-  // Function to handle adding event
+  // handle adding event
   const handleAddEvent = (recipeId) => {
     const csrftoken = getCookie('csrftoken');
     fetch('/add_event/', {
@@ -193,7 +201,7 @@ function Calendar() {
         setSelectedDate(null);
         setSearchTerm('');
         setFilteredRecipes([]);
-        fetchEvents(); // Refresh events after adding a new one
+        fetchEvents(); 
       });
   };
 

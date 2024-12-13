@@ -1,21 +1,29 @@
+/*
+#f0b593	(240,181,147) peach
+#b4e194	(180,225,148) green
+#89c4ce	(137,196,206) blue
+#f2c258	(242,194,88) yellow
+#313131	(49,49,49) black
+*/
+
 :root {
   font-family: Arial, sans-serif;
-  color: #ffffff;
-  background-color: #121212;
+  color: #f0b593; /* peach */
+  background-color: #f2c258; /* yellow */
 }
 
 a {
-  color: #ff4c4c;
+  color: #f2c258; /* yellow */
 }
 a:hover {
-  color: #ff1a1a;
+  color: #f0b593; /* peach */
 }
 
 body {
   margin: 0;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: center; /* left and right */
+  align-items: center; /* up and down */
   min-height: 100vh;
   padding: 2rem;
   box-sizing: border-box;
@@ -24,10 +32,10 @@ body {
 button {
   border-radius: 8px;
   padding: 0.6em 1.2em;
-  background-color: #1a1a1a;
-  color: #ffffff;
+  background-color: #89c4ce; /* blue */
+  color: #313131; /* black */
   cursor: pointer;
 }
 button:hover {
-  background-color: #ff4c4c;
+  background-color: #b4e194; /* green */
 }

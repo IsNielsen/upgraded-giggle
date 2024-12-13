@@ -64,14 +64,20 @@ function App() {
   */
   return (
     <div className='content'>
-      {loading && <div>Loading...</div>}
-      {user && <div>Logged in as {user.first_name}</div>}
-      <button onClick={logout}>Logout</button>
+      <div className='login'>
+        {loading && <div>Loading...</div>}
+        {user && <div>Logged in as {user.first_name}</div>}
+        <button onClick={logout}>Logout</button>
+      </div>
+      
 
-      <Link to="/RecipeForm"><button>Create Recipe</button></Link>
-      <Link to="/Cookbook"><button>View Recipes</button></Link>
-      <Link to="/SearchRecipes"><button>Search Recipes</button></Link>
-      <Link to="/Calendar"><button>View Calendar</button></Link>
+      <div className='header'>
+
+        <Link to="/RecipeForm"><button>Create Recipe</button></Link>
+        <Link to="/Cookbook"><button>View Recipes</button></Link>
+        {/* <Link to="/SearchRecipes"><button>Search Recipes</button></Link> */}
+        <Link to="/Calendar"><button>View Calendar</button></Link>
+      </div>
 
       <Outlet context={{ recipes, setRecipes, user, events, setEvents }} />
     </div>
