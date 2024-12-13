@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useOutletContext, Link } from 'react-router-dom';
+import './calendar.css'; 
 
 function Calendar() {
   const { recipes, events, setEvents } = useOutletContext();
@@ -77,7 +78,7 @@ function Calendar() {
             </Link>
           ))}
           {hoveredDate && hoveredDate.getDate() === day && (
-            <button onClick={() => setSelectedDate(date)}>Add Event</button>
+            <button className="add-event-button" onClick={() => setSelectedDate(date)}>+</button>
           )}
         </div>
       );
@@ -111,7 +112,7 @@ function Calendar() {
             </Link>
           ))}
           {hoveredDate && hoveredDate.getDate() === day.getDate() && (
-            <button onClick={() => setSelectedDate(day)}>Add Event</button>
+            <button className="add-event-button" onClick={() => setSelectedDate(day)}>+</button>
           )}
         </div>
       );
@@ -136,7 +137,7 @@ function Calendar() {
           </Link>
         ))}
         {hoveredDate && hoveredDate.getDate() === currentDate.getDate() && (
-          <button onClick={() => setSelectedDate(currentDate)}>Add Event</button>
+          <button className="add-event-button" onClick={() => setSelectedDate(currentDate)}>+</button>
         )}
       </div>
     );
@@ -241,7 +242,7 @@ function Calendar() {
               filteredRecipes.map(recipe => (
                 <div key={recipe.id}>
                   <h2>{recipe.title}</h2>
-                  <button onClick={() => handleAddEvent(recipe.id)}>Add Event</button>
+                  <button onClick={() => handleAddEvent(recipe.id)}>+</button>
                 </div>
               ))
             ) : (
