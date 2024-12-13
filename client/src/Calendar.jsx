@@ -54,6 +54,7 @@ function Calendar() {
     fetchEvents();
   }, []);
 
+
   // render the month view
   const renderMonthView = () => {
     const month = currentDate.getMonth();
@@ -70,7 +71,7 @@ function Calendar() {
     // Add days of the month
     for (let day = 1; day <= days; day++) {
       const date = new Date(year, month, day);
-      const dayEvents = events.filter(event => new Date(event.date).toDateString() === date.toDateString());
+      const dayEvents = events.filter(event => new Date(event.date).toISOString().split('T')[0] === date.toISOString().split('T')[0]);
       calendarDays.push(
         <div
           key={day}
@@ -104,7 +105,7 @@ function Calendar() {
     for (let i = 0; i < 7; i++) {
       const day = new Date(startOfWeek);
       day.setDate(startOfWeek.getDate() + i);
-      const dayEvents = events.filter(event => new Date(event.date).toDateString() === day.toDateString());
+      const dayEvents = events.filter(event => new Date(event.date).toISOString().split('T')[0] === day.toISOString().split('T')[0]);
       calendarDays.push(
         <div
           key={i}
@@ -130,7 +131,7 @@ function Calendar() {
 
   // render the day view
   const renderDayView = () => {
-    const dayEvents = events.filter(event => new Date(event.date).toDateString() === currentDate.toDateString());
+    const dayEvents = events.filter(event => new Date(event.date).toISOString().split('T')[0] === currentDate.toISOString().split('T')[0]);
     return (
       <div
         className="calendar-day"
@@ -149,6 +150,7 @@ function Calendar() {
       </div>
     );
   };
+
 
   // handle previous button click
   const handlePrev = () => {
