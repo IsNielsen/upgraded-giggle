@@ -64,6 +64,7 @@ function App() {
       <Link to="/RecipeForm"><button>Create Recipe</button></Link>
       <Link to="/Cookbook"><button>View Recipes</button></Link>
       <Link to="/SearchRecipes"><button>Search Recipes</button></Link>
+      <Link to="/Calendar"><button>View Calendar</button></Link> {/* Add link to Calendar */}
 
 
       <Outlet context={{ recipes, setRecipes, user }} />

@@ -62,3 +62,49 @@ button {
 button:hover {
   background-color: #ff4b4b;
 }
+
+
+/* CALENDAER */
+.calendar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 10px;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+}
+
+.calendar-day-name, .calendar-day, .empty-day {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ccc;
+}
+
+.calendar-day {
+  background-color: #4b4b4b;
+}
+
+.calendar-view-buttons {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.calendar-view-buttons button {
+  margin: 0 5px;
+  padding: 5px 10px;
+}

@@ -4,6 +4,7 @@ import App from './App.jsx';
 import RecipeForm from './RecipeForm.jsx';
 import Cookbook from './Cookbook.jsx';
 import SearchRecipes from './SearchRecipes.jsx';
+import Calendar from './Calendar.jsx';
 import './index.css';
 import { createHashRouter, RouterProvider } from 'react-router-dom';
 
@@ -24,6 +25,10 @@ const router = createHashRouter([
       {
         path: "SearchRecipes", // Path for the SearchRecipes component
         element: <SearchRecipes /> // Component to render for the SearchRecipes path
+      },
+      {
+        path: "Calendar", // Path for the Calendar component
+        element: <Calendar /> // Component to render for the Calendar path
       },
       // Add more routes here
       // {
