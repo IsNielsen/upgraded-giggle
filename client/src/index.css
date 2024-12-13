@@ -39,3 +39,9 @@ button {
 button:hover {
   background-color: #b4e194; /* green */
 }
+
+@media print {
+  .no-print {
+    display: none;
+  }
+}

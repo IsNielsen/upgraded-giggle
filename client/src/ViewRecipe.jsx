@@ -70,26 +70,39 @@ function ViewRecipe() {
     return cookieValue;
   }
 
+  // Function to handle printing the recipe
+  const handlePrint = () => {
+    const printContents = document.getElementById('printable-recipe').innerHTML;
+    const originalContents = document.body.innerHTML;
+    document.body.innerHTML = printContents;
+    window.print();
+    document.body.innerHTML = originalContents;
+    window.location.reload(); // Reload the page to restore the original content
+  };
+
   return (
     <div className="view-recipe">
-      <h1>{recipe.title}</h1>
-      <div>
-        <h3>Ingredients</h3>
-        <ul>
-          {recipe.ingredients && recipe.ingredients.map((ingredient, index) => (
-            <li key={index}>{ingredient.name} - {ingredient.amount}</li>
-          ))}
-        </ul>
+      <div id="printable-recipe">
+        <h1>{recipe.title}</h1>
+        <div>
+          <h3>Ingredients</h3>
+          <ul>
+            {recipe.ingredients && recipe.ingredients.map((ingredient, index) => (
+              <li key={index}>{ingredient.name} - {ingredient.amount}</li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <h3>Instructions</h3>
+          <ul>
+            {recipe.instructions && recipe.instructions.map((instruction, index) => (
+              <li key={index}>{instruction}</li>
+            ))}
+          </ul>
+        </div>
       </div>
-      <div>
-        <h3>Instructions</h3>
-        <ul>
-          {recipe.instructions && recipe.instructions.map((instruction, index) => (
-            <li key={index}>{instruction}</li>
-          ))}
-        </ul>
-      </div>
-      {eventId && <button onClick={handleDelete}>Delete from Event List</button>}
+      {eventId && <button onClick={handleDelete} className="no-print">Delete from Event List</button>}
+      <button onClick={handlePrint} className="no-print">Print Recipe</button>
     </div>
   );
 }

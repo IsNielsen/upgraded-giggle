@@ -95,7 +95,7 @@ function Cookbook() {
             ))}
           </div>
 
-          <h3>Instructions</h3>
+          {/* <h3>Instructions</h3>
           <ul>
             {recipe.instructions.map((instruction, index) => (
               <li key={index}>{instruction}</li>
@@ -109,7 +109,7 @@ function Cookbook() {
                 {ingredient.name} - {ingredient.amount}
               </li>
             ))}
-          </ul>
+          </ul> */}
 
           <button onClick={() => deleteRecipe(recipe.id)}>Delete</button>
           <Link to={`/ViewRecipeById/${recipe.id}`}><button>View Recipe</button></Link>
@@ -120,13 +120,13 @@ function Cookbook() {
       {publicRecipes.map(recipe => (
         <div key={recipe.id}>
           <h2>{recipe.title}</h2>
-          <div>
+          <ul>
             {recipe.tags.map(tag => (
-              <span key={tag}>{tag}</span>
+              <li key={tag}>{tag}</li>
             ))}
-          </div>
+          </ul>
 
-          <h3>Instructions</h3>
+          {/* <h3>Instructions</h3>
           <ul>
             {recipe.instructions.map((instruction, index) => (
               <li key={index}>{instruction}</li>
@@ -140,7 +140,7 @@ function Cookbook() {
                 {ingredient.name} - {ingredient.amount}
               </li>
             ))}
-          </ul>
+          </ul> */}
 
           <Link to={`/ViewRecipeById/${recipe.id}`}><button>View Recipe</button></Link>
         </div>

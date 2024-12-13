@@ -4,6 +4,46 @@ import django.db.models.deletion
 from django.conf import settings
 from django.db import migrations, models
 
+def add_initial_recipes(apps, schema_editor):
+    Recipe = apps.get_model('core', 'Recipe')
+    User = apps.get_model('auth', 'User')
+    
+    # Create a default user for the public recipes
+    default_user, created = User.objects.get_or_create(
+        username='default_user',
+        defaults={'email': 'default@example.com', 'password': 'defaultpassword'}
+    )
+
+    # List of initial recipes
+    initial_recipes = [
+        {
+            'title': 'Spaghetti Bolognese',
+            'ingredients': [{'name': 'Spaghetti', 'amount': '200g'}, {'name': 'Ground Beef', 'amount': '100g'}, {'name': 'Tomato Sauce', 'amount': '1 cup'}],
+            'instructions': ['Boil spaghetti', 'Cook ground beef', 'Mix with tomato sauce'],
+            'tags': ['DairyFree', 'NutFree'],
+            'public': True,
+            'user': default_user
+        },
+        {
+            'title': 'Chicken Salad',
+            'ingredients': [{'name': 'Chicken Breast', 'amount': '200g'}, {'name': 'Lettuce', 'amount': '1 cup'}, {'name': 'Caesar Dressing', 'amount': '2 tbsp'}],
+            'instructions': ['Grill chicken breast', 'Chop lettuce', 'Mix with dressing'],
+            'tags': ['GlutenFree', 'NutFree'],
+            'public': True,
+            'user': default_user
+        },
+        {
+            'title': 'Chicken Curry',
+            'ingredients': [{'name': 'Chicken Breast', 'amount': '200g'}, {'name': 'Curry Powder', 'amount': '2 tbsp'}, {'name': 'Coconut Milk', 'amount': '1 cup'}],
+            'instructions': ['Cook chicken breast', 'Mix with curry powder and coconut milk'],
+            'tags': ['DairyFree', 'GlutenFree'],
+            'public': True,
+            'user': default_user
+        }
+    ]
+     # Create the initial recipes
+    for recipe_data in initial_recipes:
+        Recipe.objects.create(**recipe_data)
 
 class Migration(migrations.Migration):
 
@@ -26,4 +66,5 @@ class Migration(migrations.Migration):
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),
+        migrations.RunPython(add_initial_recipes),
     ]
