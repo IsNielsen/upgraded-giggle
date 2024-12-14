@@ -7,6 +7,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [recipes, setRecipes] = useState([]);
   const [events, setEvents] = useState([]); // State to track the events
+  const [shoppingList, setList] = useState([]);
 
   // User authentication
 
@@ -50,12 +51,22 @@ function App() {
     setEvents(body.events);
   }
 
+  // Fetch shoppingList
+  async function getShoppingList() {
+    const res = await fetch('/shopping_list/', {  //not sure if this is right
+      credentials: "same-origin",
+    });
+    const body = await res.json();
+    setList(body.shoppingList);
+  }
+
   // place function calls inside useEffect to make sure they grab the data before rendering
 
   useEffect(() => {
     getUser();
     getRecipes();
     getEvents();
+    getShoppingList();
   }, []);
 
   /*
@@ -65,12 +76,12 @@ function App() {
   return (
     <div className='content'>
       <div className='login'>
+        <Link to="/ShoppingList"><button>Go Shopping</button></Link>
         {loading && <div>Loading...</div>}
-        {user && <div>Logged in as {user.first_name}</div>}
+        {user && <div  style={{marginLeft: 'auto'}}>Logged in as {user.first_name}</div>}
         <button onClick={logout}>Logout</button>
       </div>
       
-
       <div className='header'>
 
         <Link to="/RecipeForm"><button>Create Recipe</button></Link>
@@ -79,7 +90,7 @@ function App() {
         <Link to="/Calendar"><button>View Calendar</button></Link>
       </div>
 
-      <Outlet context={{ recipes, setRecipes, user, events, setEvents }} />
+      <Outlet context={{ recipes, setRecipes, user, events, setEvents, shoppingList, setList }} />
     </div>
   );
 }

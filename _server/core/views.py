@@ -5,7 +5,7 @@ import os
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.forms.models import model_to_dict
-from .models import Recipe, Tag, Event
+from .models import Recipe, Tag, Event, List
 
 # Load manifest when server launches
 MANIFEST = {}
@@ -91,3 +91,27 @@ def delete_event(req, event_id):
         event = Event.objects.get(id=event_id)
         event.delete()
         return JsonResponse({"message": "Event deleted"})
+    
+@login_required
+def shopping_list(req):
+    if req.method == "GET":
+        try:
+            # Try to get the shopping list for the current logged-in user
+            shopping_list = List.objects.get(user=req.user)
+            return JsonResponse({"shopping_list": model_to_dict(shopping_list)})
+        except List.DoesNotExist:
+            # If the user doesn't have a shopping list, return an empty list
+            shopping_list = List(user=req.user, items=[])
+            shopping_list.save()
+            return JsonResponse({"shopping_list": model_to_dict(shopping_list)})
+
+    elif req.method == "POST":
+        # If the request is POST, create a new shopping list or update the existing one
+        body = json.loads(req.body)
+        shopping_list, created = List.objects.get_or_create(user=req.user)
+        shopping_list.items = body.get("items", [])
+        shopping_list.save()
+        return JsonResponse({"shopping_list": model_to_dict(shopping_list)})
+
+    else:
+        return JsonResponse({"error": "Invalid HTTP method. Only GET and POST are allowed."}, status=405)

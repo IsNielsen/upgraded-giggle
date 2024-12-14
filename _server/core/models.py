@@ -20,3 +20,11 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.name
+    
+class List(models.Model):
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        primary_key=True,
+    )
+    items = models.JSONField(default=list)  # list of items to buy

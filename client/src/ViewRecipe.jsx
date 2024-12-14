@@ -19,7 +19,10 @@ function ViewRecipe() {
       return <div>Event not found</div>;
     }
 
-    recipe = event.recipe;
+    const recipeId = event.recipe.id;
+
+    recipe = recipes.find(recipe => recipe.id === parseInt(recipeId));
+
   } else if (recipeId) {
     if (!recipes) {
       return <div>Loading...</div>;
@@ -101,7 +104,7 @@ function ViewRecipe() {
           </ul>
         </div>
       </div>
-      {eventId && <button onClick={handleDelete} className="no-print">Delete from Event List</button>}
+      {eventId && <button onClick={handleDelete} className="no-print">Remove from Meal Plan</button>}
       <button onClick={handlePrint} className="no-print">Print Recipe</button>
     </div>
   );

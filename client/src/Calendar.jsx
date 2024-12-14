@@ -235,7 +235,7 @@ function Calendar() {
       </div>
       {selectedDate && (
         <div className="add-event-modal">
-          <h3>Add Event for {selectedDate.toDateString()}</h3>
+          <h3>Add Meal for {selectedDate.toDateString()}</h3>
           <form onSubmit={handleSearch}>
             <input
               type="text"

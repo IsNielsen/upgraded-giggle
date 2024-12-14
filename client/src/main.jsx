@@ -6,6 +6,7 @@ import Cookbook from './Cookbook.jsx';
 import SearchRecipes from './SearchRecipes.jsx';
 import Calendar from './Calendar.jsx';
 import ViewRecipe from './ViewRecipe.jsx'; // Import the new ViewRecipe component
+import ShoppingList from './ShoppingList.jsx';
 import './index.css';
 import { createHashRouter, RouterProvider } from 'react-router-dom';
 
@@ -38,6 +39,10 @@ const router = createHashRouter([
       {
         path: "ViewRecipeById/:recipeId", // Path for the ViewRecipe component with recipeId
         element: <ViewRecipe /> // Component to render for the ViewRecipe path
+      },
+      {
+        path: "ShoppingList", // Path for the ShoppingList component
+        element: <ShoppingList /> // Component to render for the ShoppingList path
       },
     ]
   }
