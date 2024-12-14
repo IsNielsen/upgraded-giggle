@@ -12,7 +12,7 @@
   justify-content: center;
   gap: 10px;
   align-items: center;
-
+  margin-bottom: 50px;
 }
 
 .login {
@@ -51,13 +51,14 @@
   min-width: 50%;
 }
 
-.new-recipe-form input,
-.new-recipe-form textarea {
+
+input {
   padding: 5px;
   border: 1px solid #b4e194; /* green */
   border-radius: 4px;
   background-color: #89c4ce; /* blue */
   color: #313131; /* black */
+  margin: 5px 10px;
 }
 
 .new-recipe-form button {
@@ -75,7 +76,7 @@
 button {
   background-color: #f2c258; /* yellow */
   color: #313131; /* black */
-  border: 1px solid #313131; /* black */
+  border: none;
   padding: 5px;
   border-radius: 5px;
   cursor: pointer;
@@ -101,4 +102,9 @@ button:hover {
   background-color: #313131; /* black */
   padding: 50px;
   border-radius: 10px;
+}
+
+hr {
+  width: 100%;
+  border: 1px solid #f0b593; /* peach */
 }
