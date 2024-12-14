@@ -11,4 +11,5 @@ urlpatterns = [
     path('events/', views.get_events, name='get_events'),  # New path for fetching events
     path('events/<int:event_id>/', views.delete_event, name='delete_event'),  # New path for deleting events
     path('shopping_list/', views.shopping_list, name='shopping_list'),  # New path for making the shopping list
+    path('add_to_shopping_list/', views.add_to_shopping_list, name='add_to_shopping_list'),  # Adding to the shopping list
 ]

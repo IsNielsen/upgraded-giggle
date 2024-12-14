@@ -1,29 +1,22 @@
 import { Outlet, Link, useOutletContext } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 // import './App.css';
+// import cookie from 'cookie';
+import * as cookie from 'cookie';
 
 function ShoppingList() {
     const [items, setItems] = useState([]);
-    // const [itemInput, setItemInput] = useState('');
     const [itemName, setItemName] = useState('');
-    // const { events, user, shoppingList } = useOutletContext();
-    const { events, user } = useOutletContext();
-
+    const { events, user, recipes } = useOutletContext();
     const [shoppingList, setShoppingList] = useState(null);
 
      // Fetch shopping list data
      const fetchShoppingList = async () => {
         const res = await fetch('/shopping_list/', {
-            credentials: 'same-origin',  // Include cookies for authentication
+            credentials: 'same-origin',
         });
-
         const body = await res.json();
-
-        if (body.shopping_list) {
-            setShoppingList(body.shopping_list);  // Set the shopping list object to state
-        } else {
-            console.error('No shopping list found');
-        }
+        setShoppingList(body.shopping_list);
     };
 
     // Call fetchShoppingList only once when the component mounts
@@ -31,27 +24,66 @@ function ShoppingList() {
         fetchShoppingList();
     }, []); 
 
+
+    const addToShoppingList = async (item) => {
+        const csrftoken = cookie.parse(document.cookie).csrftoken; // Extract CSRF token from cookies
+        
+    
+        const res = await fetch('/add_to_shopping_list/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken,  // Include the CSRF token
+            },
+            body: JSON.stringify({
+                item: item,
+            }),
+            credentials: 'same-origin',  // Ensure the cookie is sent with the request
+        });
+
+        if (res.ok) {
+            const updatedList = await res.json();
+            setShoppingList(updatedList.shopping_list);  // Update the shopping list state
+        } else {
+            console.error('Failed to add item');
+        }
+    };
+
     function addItem(e){
         e.preventDefault();
+        setItems(shoppingList.items);
+
         if (itemName) {
             setItems([...items, itemName]);  // add it to the list
+            addToShoppingList(itemName);  // back end
             setItemName('');  // make the input field blank again
           }
     }
 
     function removeItem(index){
-        console.log(shoppingList.items);
-        setItems(shoppingList.items.filter((_, i) => i !== index));
+        // Back end needs fixing
+        setItems(items.filter((_, i) => i !== index));
     }
 
-    // TODO
-    // grab ingredients from the meals of the next 7 calendar days
+    // Needs to grab ingredients from the meals of the next 7 calendar days
     function pullFromMealPlan(){
-        console.log(shoppingList); //print .type?? NOT WORKING
-        // console.log(shoppingList.user);
-        // console.log(shoppingList.items);
-        console.log(user);
-        console.log(events);
+
+        // Get today's date (currentDate), only with year, month, and day
+        const currentDate = new Date();
+
+        for(var event in events){
+            // Convert event.date to a Date object
+            const eventDate = new Date(event.date);
+
+            if(eventDate < currentDate){
+                const recipeId = event.recipe.id;
+                const recipe = recipes.find(recipe => recipe.id === parseInt(recipeId));
+
+                for(var ingredient in recipe.ingredients){
+                    addToShoppingList(ingredient[0]);  // just the ingredient name
+                }
+            }
+        }
     }
 
     return (
@@ -68,6 +100,7 @@ function ShoppingList() {
                 <button type='button' onClick={addItem}>Add Item</button>
             </div>
             <ul>
+                {/* {shoppingList && shoppingList.items && Array.isArray(shoppingList.items) && shoppingList.items.map((item, index) => ( */}
                 {items.map((item, index) => (
                     <li key={index}>
                     {item}

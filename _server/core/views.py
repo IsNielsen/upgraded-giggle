@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.forms.models import model_to_dict
 from .models import Recipe, Tag, Event, List
+from django.views.decorators.csrf import csrf_protect
 
 # Load manifest when server launches
 MANIFEST = {}
@@ -115,3 +116,19 @@ def shopping_list(req):
 
     else:
         return JsonResponse({"error": "Invalid HTTP method. Only GET and POST are allowed."}, status=405)
+    
+@login_required
+@csrf_protect
+def add_to_shopping_list(req):
+    if req.method == "POST":
+        body = json.loads(req.body)
+        item = body["item"]
+
+        shopping_list = List.objects.get(user=req.user)
+        shopping_list.items.append(item)  # Add the item to the list
+
+        shopping_list.save()  # Save the updated shopping list
+
+        return JsonResponse({"shopping_list": shopping_list.items})
+    
+    return JsonResponse({"error": "Invalid method"}, status=405)
