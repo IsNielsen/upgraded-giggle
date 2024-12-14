@@ -10,7 +10,6 @@ function App() {
   const [shoppingList, setList] = useState([]);
 
   // User authentication
-
   async function getUser() {
     const res = await fetch('/me/', {
       credentials: "same-origin",
@@ -28,12 +27,11 @@ function App() {
     if (res.ok) {
       window.location = "/registration/sign_in/";
     } else {
-      // handle logout failed!
+      console.error('Logout failed!');
     }
   }
 
-  // Recipe CRUD
-
+  // Fetch recipes
   async function getRecipes() {
     const res = await fetch('/recipes/', {
       credentials: "same-origin",
@@ -53,15 +51,14 @@ function App() {
 
   // Fetch shoppingList
   async function getShoppingList() {
-    const res = await fetch('/shopping_list/', {  //not sure if this is right
+    const res = await fetch('/shopping_list/', {
       credentials: "same-origin",
     });
     const body = await res.json();
     setList(body.shoppingList);
   }
 
-  // place function calls inside useEffect to make sure they grab the data before rendering
-
+  // Make sure to grab the data before rendering
   useEffect(() => {
     getUser();
     getRecipes();
@@ -83,10 +80,8 @@ function App() {
       </div>
       
       <div className='header'>
-
         <Link to="/RecipeForm"><button>Create Recipe</button></Link>
         <Link to="/Cookbook"><button>View Recipes</button></Link>
-        {/* <Link to="/SearchRecipes"><button>Search Recipes</button></Link> */}
         <Link to="/Calendar"><button>View Calendar</button></Link>
       </div>
 

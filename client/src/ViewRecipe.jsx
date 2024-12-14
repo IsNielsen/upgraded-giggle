@@ -4,10 +4,11 @@ import { useParams, useNavigate, useOutletContext } from 'react-router-dom';
 function ViewRecipe() {
   const { eventId, recipeId } = useParams();
   const navigate = useNavigate();
-  const { events, setEvents, recipes } = useOutletContext(); // Use context to get events, setEvents, and recipes
+  const { events, setEvents, recipes } = useOutletContext();
 
   let recipe;
 
+  // If displaying in the meal calendar
   if (eventId) {
     if (!events) {
       return <div>Loading...</div>;
@@ -19,11 +20,13 @@ function ViewRecipe() {
       return <div>Event not found</div>;
     }
 
+    // grab the recipe object so we can display it later
     const recipeId = event.recipe.id;
-
     recipe = recipes.find(recipe => recipe.id === parseInt(recipeId));
-
-  } else if (recipeId) {
+  } 
+  
+  // If displaying on the Recipes page
+  else if (recipeId) {
     if (!recipes) {
       return <div>Loading...</div>;
     }
@@ -37,6 +40,7 @@ function ViewRecipe() {
     return <div>Invalid request</div>;
   }
 
+  // delete a recipe
   const handleDelete = async () => {
     if (eventId) {
       const csrftoken = getCookie('csrftoken');

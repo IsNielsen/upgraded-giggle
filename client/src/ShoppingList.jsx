@@ -1,7 +1,5 @@
 import { Outlet, Link, useOutletContext } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-// import './App.css';
-// import cookie from 'cookie';
 import * as cookie from 'cookie';
 
 function ShoppingList() {
@@ -19,36 +17,35 @@ function ShoppingList() {
         setShoppingList(body.shopping_list);
     };
 
-    // Call fetchShoppingList only once when the component mounts
+    // Call fetchShoppingList after the component mounts
     useEffect(() => {
         fetchShoppingList();
     }, []); 
 
-
+    // connect to the backend to add items to the shopping list
     const addToShoppingList = async (item) => {
-        const csrftoken = cookie.parse(document.cookie).csrftoken; // Extract CSRF token from cookies
-        
-    
+        const csrftoken = cookie.parse(document.cookie).csrftoken;
         const res = await fetch('/add_to_shopping_list/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRFToken': csrftoken,  // Include the CSRF token
+                'X-CSRFToken': csrftoken,
             },
             body: JSON.stringify({
                 item: item,
             }),
-            credentials: 'same-origin',  // Ensure the cookie is sent with the request
+            credentials: 'same-origin',
         });
 
         if (res.ok) {
             const updatedList = await res.json();
-            setShoppingList(updatedList.shopping_list);  // Update the shopping list state
+            setShoppingList(updatedList.shopping_list);
         } else {
             console.error('Failed to add item');
         }
     };
 
+    // update the backend and the frontend when adding an item
     function addItem(e){
         e.preventDefault();
         setItems(shoppingList.items);
@@ -72,9 +69,10 @@ function ShoppingList() {
         const currentDate = new Date();
 
         for(var event in events){
-            // Convert event.date to a Date object
+            // Convert event.date to a Date object so we can compare them
             const eventDate = new Date(event.date);
 
+            // for meals in the future, add their ingredients to the shopping list
             if(eventDate < currentDate){
                 const recipeId = event.recipe.id;
                 const recipe = recipes.find(recipe => recipe.id === parseInt(recipeId));
@@ -88,7 +86,7 @@ function ShoppingList() {
 
     return (
         <main className='new-recipe-form' style={{width: "300px"}}> 
-            <h3>Shopping List</h3>
+            <h2>Shopping List</h2>
             <div>
                 <button type='button' onClick={pullFromMealPlan} style={{marginBottom: "10px"}}>Add Ingredients from Upcoming Meal Plan</button>
                 <input
@@ -100,7 +98,6 @@ function ShoppingList() {
                 <button type='button' onClick={addItem}>Add Item</button>
             </div>
             <ul>
-                {/* {shoppingList && shoppingList.items && Array.isArray(shoppingList.items) && shoppingList.items.map((item, index) => ( */}
                 {items.map((item, index) => (
                     <li key={index}>
                     {item}
@@ -110,7 +107,6 @@ function ShoppingList() {
             </ul>
         </main>
     );
-
 }
 
 export default ShoppingList;

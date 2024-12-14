@@ -1,10 +1,3 @@
-/* 
-  Whatever you do, do not read this file. It is a mess.
-  I struggled getting the built in react calendar to work, 
-  so I found a tutorial to help build it from scratch for what I needed.
-  It is very janky but I am proud of it.
-*/
-
 import React, { useState, useEffect } from 'react';
 import { useOutletContext, Link } from 'react-router-dom';
 import './calendar.css'; 
@@ -25,7 +18,8 @@ function Calendar() {
       const cookies = document.cookie.split(';');
       for (let i = 0; i < cookies.length; i++) {
         const cookie = cookies[i].trim();
-        // Does this cookie string begin with the name we want?
+
+        // Check if this cookie string begins with the name we want
         if (cookie.substring(0, name.length + 1) === (name + '=')) {
           cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
           break;
@@ -50,10 +44,10 @@ function Calendar() {
     setEvents(body.events);
   };
 
+  // Grab data before rendering
   useEffect(() => {
     fetchEvents();
   }, []);
-
 
   // render the month view
   const renderMonthView = () => {
@@ -63,6 +57,7 @@ function Calendar() {
     const firstDay = firstDayOfMonth(month, year);
 
     const calendarDays = [];
+
     // Add empty days for the first week
     for (let i = 0; i < firstDay; i++) {
       calendarDays.push(<div key={`empty-${i}`} className="empty-day"></div>);
@@ -72,6 +67,7 @@ function Calendar() {
     for (let day = 1; day <= days; day++) {
       const date = new Date(year, month, day);
       const dayEvents = events.filter(event => new Date(event.date).toISOString().split('T')[0] === date.toISOString().split('T')[0]);
+      
       calendarDays.push(
         <div
           key={day}
@@ -101,11 +97,13 @@ function Calendar() {
     startOfWeek.setDate(currentDate.getDate() - currentDate.getDay());
 
     const calendarDays = [];
+
     // Add days of the week
     for (let i = 0; i < 7; i++) {
       const day = new Date(startOfWeek);
       day.setDate(startOfWeek.getDate() + i);
       const dayEvents = events.filter(event => new Date(event.date).toISOString().split('T')[0] === day.toISOString().split('T')[0]);
+      
       calendarDays.push(
         <div
           key={i}
@@ -125,7 +123,6 @@ function Calendar() {
         </div>
       );
     }
-
     return calendarDays;
   };
 
@@ -139,11 +136,13 @@ function Calendar() {
         onMouseLeave={() => setHoveredDate(null)}
       >
         <div className="date">{currentDate.getDate()}</div>
+
         {dayEvents.map(event => (
           <Link key={event.id} to={`/ViewRecipe/${event.id}`}>
             <div className="event">{event.recipe.title}</div>
           </Link>
         ))}
+        
         {hoveredDate && hoveredDate.getDate() === currentDate.getDate() && (
           <button className="add-event-button" onClick={() => setSelectedDate(currentDate)}>+</button>
         )}

@@ -16,7 +16,6 @@
 }
 
 .login {
-  /* margin-left: auto; */
   width: 100%;
   display: flex;
   align-items: center;
@@ -51,7 +50,6 @@
   min-width: 50%;
 }
 
-
 input {
   padding: 5px;
   border: 1px solid #b4e194; /* green */
@@ -69,6 +67,7 @@ input {
   border-radius: 5px;
   cursor: pointer;
 }
+
 .new-recipe-form button:hover {
   background-color: #f0b593; /* peach */
 }
@@ -81,6 +80,7 @@ button {
   border-radius: 5px;
   cursor: pointer;
 }
+
 button:hover {
   background-color: #f0b593; /* peach */
 }

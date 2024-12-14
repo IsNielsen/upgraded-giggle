@@ -7,6 +7,7 @@ function Cookbook() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredRecipes, setFilteredRecipes] = useState([]);
 
+  // connect to the backend
   async function deleteRecipe(id) {
     const res = await fetch(`/recipes/${id}/`, {
       method: 'DELETE',
@@ -24,6 +25,7 @@ function Cookbook() {
     }
   }
 
+  // search for recipes by name
   const handleSearch = (e) => {
     e.preventDefault();
     const results = recipes.filter(recipe =>
@@ -37,6 +39,7 @@ function Cookbook() {
     return <div>Loading...</div>;
   }
 
+  // separate into self-owned and public recipes
   const myRecipes = recipes.filter(recipe => recipe.user === user.id);
   const publicRecipes = recipes.filter(recipe => recipe.public && recipe.user !== user.id);
 
@@ -96,23 +99,6 @@ function Cookbook() {
               <span key={tag}>{tag}</span>
             ))}
           </div>
-
-          {/* <h3>Instructions</h3>
-          <ul>
-            {recipe.instructions.map((instruction, index) => (
-              <li key={index}>{instruction}</li>
-            ))}
-          </ul>
-
-          <h3>Ingredients</h3>
-          <ul>
-            {recipe.ingredients.map((ingredient, index) => (
-              <li key={index}>
-                {ingredient.name} - {ingredient.amount}
-              </li>
-            ))}
-          </ul> */}
-
           <button onClick={() => deleteRecipe(recipe.id)}>Delete</button>
           <Link to={`/ViewRecipeById/${recipe.id}`}><button>View Recipe</button></Link>
         </div>
@@ -128,23 +114,6 @@ function Cookbook() {
               <li key={tag}>{tag}</li>
             ))}
           </ul>
-
-          {/* <h3>Instructions</h3>
-          <ul>
-            {recipe.instructions.map((instruction, index) => (
-              <li key={index}>{instruction}</li>
-            ))}
-          </ul>
-
-          <h3>Ingredients</h3>
-          <ul>
-            {recipe.ingredients.map((ingredient, index) => (
-              <li key={index}>
-                {ingredient.name} - {ingredient.amount}
-              </li>
-            ))}
-          </ul> */}
-
           <Link to={`/ViewRecipeById/${recipe.id}`}><button>View Recipe</button></Link>
         </div>
       ))}

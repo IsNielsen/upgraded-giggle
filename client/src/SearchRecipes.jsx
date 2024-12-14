@@ -6,6 +6,7 @@ function SearchRecipes() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredRecipes, setFilteredRecipes] = useState([]);
 
+  // search the recipes for title
   const handleSearch = (e) => {
     e.preventDefault();
     const results = recipes.filter(recipe =>

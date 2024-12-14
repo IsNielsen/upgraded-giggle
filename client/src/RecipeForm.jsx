@@ -15,6 +15,7 @@ function RecipeForm() {
   const [tags, setTags] = useState([]);
   const [isPublic, setIsPublic] = useState(false);
 
+  // connect to the backend to create a recipe
   async function createRecipe(e) {
     e.preventDefault();
 
@@ -42,6 +43,7 @@ function RecipeForm() {
     setIsPublic(false);
   }
 
+  // add ingredient & its amount to the recipe
   function addIngredient(e) {
     e.preventDefault();
     if (ingredientName && ingredientAmount) {
@@ -51,10 +53,12 @@ function RecipeForm() {
     }
   }
 
+  // remove ingredient & its amount from the recipe
   function removeIngredient(index) {
     setIngredients(ingredients.filter((_, i) => i !== index));
   }
 
+  // add recipe instructions
   function addInstruction(e) {
     e.preventDefault();
     if (instructionInput) {
@@ -63,10 +67,12 @@ function RecipeForm() {
     }
   }
 
+  // remove recipe instructions
   function removeInstruction(index) {
     setInstructions(instructions.filter((_, i) => i !== index));
   }
 
+  // mark dietary restriction tags
   function handleTagChange(tag) {
     if (tags.includes(tag)) {
       setTags(tags.filter(t => t !== tag));

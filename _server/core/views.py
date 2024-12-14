@@ -29,6 +29,7 @@ def index(req):
 def me(req):
     return JsonResponse({"user": model_to_dict(req.user)})
 
+# Saves new recipes to the database
 @login_required
 def recipes(req):
     if req.method == "POST":
@@ -48,6 +49,7 @@ def recipes(req):
     public_recipes = [model_to_dict(recipe) for recipe in Recipe.objects.filter(public=True).exclude(user=req.user)]
     return JsonResponse({"recipes": user_recipes + public_recipes})
 
+# Delete recipes from the database
 @login_required
 def delete_recipe(req, recipe_id):
     if req.method == 'DELETE':
@@ -55,6 +57,7 @@ def delete_recipe(req, recipe_id):
         recipe.delete()
         return JsonResponse({"message": "Recipe deleted"})
 
+# Create a new meal plan
 @login_required
 def add_event(req):
     if req.method == "POST":
@@ -70,6 +73,7 @@ def get_tags(req):
     tags = list(Tag.objects.values('name'))
     return JsonResponse(tags, safe=False)
 
+# Grab all the meal plans for a user
 @login_required
 def get_events(req):
     events = Event.objects.filter(user=req.user).select_related('recipe')
@@ -86,6 +90,7 @@ def get_events(req):
     ]
     return JsonResponse({'events': events_data})
 
+# Delete a meal from the meal plan
 @login_required
 def delete_event(req, event_id):
     if req.method == 'DELETE':
@@ -93,6 +98,7 @@ def delete_event(req, event_id):
         event.delete()
         return JsonResponse({"message": "Event deleted"})
     
+# Create a new shopping list for a new user    
 @login_required
 def shopping_list(req):
     if req.method == "GET":
@@ -100,14 +106,15 @@ def shopping_list(req):
             # Try to get the shopping list for the current logged-in user
             shopping_list = List.objects.get(user=req.user)
             return JsonResponse({"shopping_list": model_to_dict(shopping_list)})
+        
         except List.DoesNotExist:
-            # If the user doesn't have a shopping list, return an empty list
+            # If the user doesn't have a shopping list, return an empty shopping list
             shopping_list = List(user=req.user, items=[])
             shopping_list.save()
             return JsonResponse({"shopping_list": model_to_dict(shopping_list)})
 
+    # Create a new shopping list or update the existing one
     elif req.method == "POST":
-        # If the request is POST, create a new shopping list or update the existing one
         body = json.loads(req.body)
         shopping_list, created = List.objects.get_or_create(user=req.user)
         shopping_list.items = body.get("items", [])
@@ -117,6 +124,7 @@ def shopping_list(req):
     else:
         return JsonResponse({"error": "Invalid HTTP method. Only GET and POST are allowed."}, status=405)
     
+# Add items to the shopping list    
 @login_required
 @csrf_protect
 def add_to_shopping_list(req):
