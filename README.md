@@ -1,5 +1,6 @@
 ## Authors:
-Ally Hassett
+Ally Hassett,
+
 Isaac Nielsen
 
 ## Strategy

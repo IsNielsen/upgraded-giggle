@@ -52,6 +52,7 @@ function Cookbook() {
         />
         <button type="submit">Search</button>
       </form>
+
       <div>
         {filteredRecipes.length > 0 ? (
           filteredRecipes.map(recipe => (
@@ -84,6 +85,7 @@ function Cookbook() {
           <p>No recipes found</p>
         )}
       </div>
+      <hr />
 
       <h1>My Recipes</h1>
       {myRecipes.map(recipe => (
@@ -115,6 +117,7 @@ function Cookbook() {
           <Link to={`/ViewRecipeById/${recipe.id}`}><button>View Recipe</button></Link>
         </div>
       ))}
+      <hr />
 
       <h1>Public Recipes</h1>
       {publicRecipes.map(recipe => (
