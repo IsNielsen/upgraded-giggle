@@ -81,7 +81,7 @@ function App() {
       
       <div className='header'>
         <Link to="/RecipeForm"><button>Create Recipe</button></Link>
-        <Link to="/Cookbook"><button>View Recipes</button></Link>
+        <Link to="/Cookbook"><button>Cook Book</button></Link>
         <Link to="/Calendar"><button>View Calendar</button></Link>
       </div>
 
