@@ -1,8 +1,9 @@
-# 2610 Django + Vite Starting Point
-This project serves as a starting point you to use as a starting point for Django applications that use Vite as the asset server for development. You are welcome to us this project for all of your assignments beginning with Module 5.
+## Authors:
+Ally Hassett
+Isaac Nielsen
 
 ## Strategy
-This application is a hybrid MPA and SPA. It reuses all of the login stuff that we did at the end of module 3 - there is a separate page for signup/signin. Once a user is logged in they are redirected to the / view which then renders the SPA application created using React and Vite.
+This application is a hybrid MPA and SPA. Tere is a separate page for signup/signin. Once a user is logged in they are redirected to the / view which then renders the SPA application created using React and Vite.
 
 ## Creating a new application
 1. Clone the repo `git clone git@github.com:dittonjs/2610DjangoViteStarter.git <your-new-project-name>`. Replace `<your-new-project-name>` with the name you want give to your project.
@@ -24,5 +25,3 @@ This application is a hybrid MPA and SPA. It reuses all of the login stuff that 
 2. In the `_server` directory (with your poetry env activated) run `python manage.py runserver`
 3. Visit your application at `http://localhost:8000`
 
-## Using this project for future classes/personal projects
-Many students in the past have chosen to use this starter app template for projects in other classes like CS3450 and for personal projects. I strongly encourage you to do so! Please check with your other instructors before you use this project as a starting point for their classes. You may also want to add your name to the author field in the `pyproject.toml` file.
